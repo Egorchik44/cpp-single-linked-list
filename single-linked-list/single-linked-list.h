@@ -181,7 +181,7 @@ public:
             for(auto& item : values){
         it=tmp.InsertAfter(it, item);
         }
-		swap(tmp);
+	swap(tmp);
     }
 
     SingleLinkedList(const SingleLinkedList& other) {
@@ -191,7 +191,7 @@ public:
             for(auto& item : other){
         it=tmp.InsertAfter(it, item);
         }
-		swap(tmp);
+	swap(tmp);
     }
 
     SingleLinkedList& operator=(const SingleLinkedList& rhs) {
