@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cassert>
 #include <cstddef>
 #include <iterator>
@@ -97,6 +95,7 @@ class SingleLinkedList {
         // Возвращает ссылку на самого себя
         // Инкремент итератора, не указывающего на существующий элемент списка, приводит к неопределённому поведению
         BasicIterator& operator++() noexcept {
+            assert(node_ != nullptr);
             node_ = node_->next_node;
             return *this;
         }
@@ -115,6 +114,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] reference operator*() const noexcept {
+            assert(node_ != nullptr);
             return node_->value;
         }
 
@@ -122,6 +122,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] pointer operator->() const noexcept {
+            assert(node_ != nullptr);
             return &node_->value;
         }
 
@@ -174,28 +175,23 @@ public:
     using ConstIterator = BasicIterator<const Type>;
 
     SingleLinkedList(std::initializer_list<Type> values) {
+        
         SingleLinkedList tmp;
-        SingleLinkedList tmp2;
-        for (auto it = values.begin(); it != values.end(); ++it) {
-            tmp.PushFront(*it);
+        auto it = tmp.before_begin();
+            for(auto& item : values){
+        it=tmp.InsertAfter(it, item);
         }
-        for (auto it = tmp.begin(); it != tmp.end(); ++it) {
-            tmp2.PushFront(*it);
-        }
-        swap(tmp2);
+		swap(tmp);
     }
 
     SingleLinkedList(const SingleLinkedList& other) {
         assert(size_ == 0 && head_.next_node == nullptr);
         SingleLinkedList tmp;
-        SingleLinkedList tmp2;
-        for (auto it = other.begin(); it != other.end(); ++it) {
-            tmp.PushFront(*it);
+        auto it = tmp.before_begin();
+            for(auto& item : other){
+        it=tmp.InsertAfter(it, item);
         }
-        for (auto it = tmp.begin(); it != tmp.end(); ++it) {
-            tmp2.PushFront(*it);
-        }
-        swap(tmp2);
+		swap(tmp);
     }
 
     SingleLinkedList& operator=(const SingleLinkedList& rhs) {
@@ -280,7 +276,7 @@ public:
      */
     Iterator EraseAfter(ConstIterator pos) noexcept {
         assert(!IsEmpty());
-
+        assert(pos.node_ != nullptr);
         Node* temp = pos.node_->next_node->next_node;
         delete pos.node_->next_node;
         pos.node_->next_node = temp;
